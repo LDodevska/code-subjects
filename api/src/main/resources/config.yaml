@@ -1,0 +1,18 @@
+kumuluzee:
+  name: code-subjects
+  env:
+    name: dev
+  version: 1.0.0
+  server:
+    base-url: http://localhost:8083
+    http:
+      port: 8083
+  datasources:
+    - jndi-name: jdbc/SubjectMetadataPS
+      connection-url: jdbc:postgresql://localhost:5433/code-subjects
+      username: dbuser
+      password: postgres
+      max-pool-size: 20
+  discovery:
+    etcd:
+      hosts: http://localhost:2379

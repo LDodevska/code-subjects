@@ -1,0 +1,1 @@
+INSERT INTO subject_entity (name, programmingLanguage) VALUES ('Algorithms', 'Java'), ('NLP', 'Python'), ('OO programming', 'Java');
