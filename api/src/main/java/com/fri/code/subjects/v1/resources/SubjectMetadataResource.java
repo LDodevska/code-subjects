@@ -43,9 +43,6 @@ public class SubjectMetadataResource {
         }
     }
 
-
-
-
     @POST
     public Response createSubject(SubjectMetadata subjectMetadata) {
 
