@@ -16,3 +16,13 @@ kumuluzee:
   discovery:
     etcd:
       hosts: http://localhost:2379
+  health:
+    checks:
+      data-source-health-check:
+        type: liveness
+        jndi-name: jdbc/SubjectMetadataPS
+    metrics:
+      web-instrumentation:
+        - name: subjects-endpoint
+          url-pattern: /v1/subjects/*
+

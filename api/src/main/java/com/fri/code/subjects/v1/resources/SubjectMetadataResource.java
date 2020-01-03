@@ -3,6 +3,7 @@ package com.fri.code.subjects.v1.resources;
 import com.fri.code.subjects.lib.SubjectMetadata;
 import com.fri.code.subjects.services.beans.SubjectMetadataBean;
 import com.fri.code.subjects.v1.dtos.ApiError;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -23,6 +24,7 @@ public class SubjectMetadataResource {
 
     @GET
     @Path("/all")
+    @Timed
     public Response getSubjects() {
         List<SubjectMetadata> subjects = subjectMetadataBean.getSubjects();
         return Response.status(Response.Status.OK).entity(subjects).build();
