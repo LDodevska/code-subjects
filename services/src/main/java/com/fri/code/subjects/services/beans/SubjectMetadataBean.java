@@ -30,11 +30,6 @@ public class SubjectMetadataBean {
         return SubjectMetadataConverter.toDTO(query.setParameter(1, subjectID).getSingleResult());
     }
 
-    public List<SubjectMetadata> getSubjectsForUser(Integer userID){
-        TypedQuery<SubjectMetadataEntity> query = em.createNamedQuery("SubjectMetadataEntity.getAll", SubjectMetadataEntity.class).setParameter(1, userID);
-        return query.getResultList().stream().map(SubjectMetadataConverter::toDTO).collect(Collectors.toList());
-    }
-
     public SubjectMetadata addUser(Integer subjectID, Integer userID){
         SubjectMetadataEntity entity = em.find(SubjectMetadataEntity.class, subjectID);
 
@@ -44,6 +39,31 @@ public class SubjectMetadataBean {
 
         SubjectMetadata subjectDto = SubjectMetadataConverter.toDTO(entity);
         subjectDto.addUserId(userID);
+
+        SubjectMetadataEntity updatedEntity = SubjectMetadataConverter.toEntity(subjectDto);
+
+        try {
+            beginTx();
+            updatedEntity.setID(entity.getID());
+            updatedEntity = em.merge(updatedEntity);
+            commitTx();
+        } catch (Exception e) {
+            rollbackTx();
+        }
+
+        return SubjectMetadataConverter.toDTO(updatedEntity);
+
+    }
+
+    public SubjectMetadata removeUser(Integer subjectID, Integer userID){
+        SubjectMetadataEntity entity = em.find(SubjectMetadataEntity.class, subjectID);
+
+        if (entity == null){
+            return null;
+        }
+
+        SubjectMetadata subjectDto = SubjectMetadataConverter.toDTO(entity);
+        subjectDto.removeUserId(userID);
 
         SubjectMetadataEntity updatedEntity = SubjectMetadataConverter.toEntity(subjectDto);
 

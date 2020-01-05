@@ -8,10 +8,7 @@ import java.util.List;
 @NamedQueries(
         value = {
             @NamedQuery(name = "SubjectMetadataEntity.getAll", query = "SELECT subject FROM SubjectMetadataEntity subject"),
-            @NamedQuery(name = "SubjectMetadataEntity.getSubjectById", query = "SELECT subject FROM SubjectMetadataEntity subject WHERE subject.ID =?1"),
-            @NamedQuery(name = "SubjectMetadataEntity.getSubjectsByUserId",
-                    query = "SELECT subject FROM SubjectMetadataEntity subject " +
-                            "JOIN subject.users u WHERE u =?1")
+            @NamedQuery(name = "SubjectMetadataEntity.getSubjectById", query = "SELECT subject FROM SubjectMetadataEntity subject WHERE subject.ID =?1")
         }
 )
 public class SubjectMetadataEntity {

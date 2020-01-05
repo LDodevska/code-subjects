@@ -3,14 +3,19 @@ package com.fri.code.subjects.v1.resources;
 import com.fri.code.subjects.lib.SubjectMetadata;
 import com.fri.code.subjects.services.beans.SubjectMetadataBean;
 import com.fri.code.subjects.v1.dtos.ApiError;
+import com.kumuluz.ee.discovery.annotations.DiscoverService;
 import org.eclipse.microprofile.metrics.annotation.Timed;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 @Path("/subjects")
@@ -20,6 +25,17 @@ public class SubjectMetadataResource {
 
     @Inject
     private SubjectMetadataBean subjectMetadataBean;
+
+    @Inject
+    @DiscoverService(value = "code-users")
+    private Optional<String> usersPath;
+
+    Client httpClient;
+
+    @PostConstruct
+    private void init() {
+        httpClient = ClientBuilder.newClient();
+    }
 
 
     @GET
@@ -52,12 +68,27 @@ public class SubjectMetadataResource {
         if (subjectMetadata == null){
             ApiError error = new ApiError();
             error.setCode(Response.Status.BAD_REQUEST.toString());
-            error.setMessage("Something is wrong");
+            error.setMessage("The user cannot be added");
             error.setStatus(Response.Status.BAD_REQUEST.getStatusCode());
             return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
         }
         return Response.status(Response.Status.OK).entity(subjectMetadata).build();
     }
+
+    @PUT
+    @Path("/{subjectID}/removeUser")
+    public Response removeUser(@PathParam("subjectID") Integer subjectID, @QueryParam("userID") Integer userID){
+        SubjectMetadata subjectMetadata = subjectMetadataBean.addUser(subjectID, userID);
+        if (subjectMetadata == null){
+            ApiError error = new ApiError();
+            error.setCode(Response.Status.BAD_REQUEST.toString());
+            error.setMessage("The user cannot be removed");
+            error.setStatus(Response.Status.BAD_REQUEST.getStatusCode());
+            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
+        }
+        return Response.status(Response.Status.OK).entity(subjectMetadata).build();
+    }
+
 
     @POST
     public Response createSubject(SubjectMetadata subjectMetadata) {
