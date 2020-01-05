@@ -45,6 +45,20 @@ public class SubjectMetadataResource {
         }
     }
 
+    @PUT
+    @Path("/{subjectID}/addUser")
+    public Response addUser(@PathParam("subjectID") Integer subjectID, @QueryParam("userID") Integer userID){
+        SubjectMetadata subjectMetadata = subjectMetadataBean.addUser(subjectID, userID);
+        if (subjectMetadata == null){
+            ApiError error = new ApiError();
+            error.setCode(Response.Status.BAD_REQUEST.toString());
+            error.setMessage("Something is wrong");
+            error.setStatus(Response.Status.BAD_REQUEST.getStatusCode());
+            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
+        }
+        return Response.status(Response.Status.OK).entity(subjectMetadata).build();
+    }
+
     @POST
     public Response createSubject(SubjectMetadata subjectMetadata) {
 

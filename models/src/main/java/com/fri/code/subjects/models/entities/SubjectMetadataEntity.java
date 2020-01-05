@@ -1,13 +1,17 @@
 package com.fri.code.subjects.models.entities;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "subject_entity")
 @NamedQueries(
         value = {
             @NamedQuery(name = "SubjectMetadataEntity.getAll", query = "SELECT subject FROM SubjectMetadataEntity subject"),
-            @NamedQuery(name = "SubjectMetadataEntity.getSubjectById", query = "SELECT subject FROM SubjectMetadataEntity subject WHERE subject.ID =?1")
+            @NamedQuery(name = "SubjectMetadataEntity.getSubjectById", query = "SELECT subject FROM SubjectMetadataEntity subject WHERE subject.ID =?1"),
+            @NamedQuery(name = "SubjectMetadataEntity.getSubjectsByUserId",
+                    query = "SELECT subject FROM SubjectMetadataEntity subject " +
+                            "JOIN subject.users u WHERE u =?1")
         }
 )
 public class SubjectMetadataEntity {
@@ -21,6 +25,17 @@ public class SubjectMetadataEntity {
 
     @Column(name = "programmingLanguage")
     private String programmingLanguage;
+
+    @ElementCollection
+    private List<Integer> users;
+
+    public List<Integer> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<Integer> users) {
+        this.users = users;
+    }
 
     public Integer getID() {
         return ID;

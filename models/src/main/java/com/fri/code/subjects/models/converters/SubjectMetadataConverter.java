@@ -11,6 +11,7 @@ public class SubjectMetadataConverter {
         subjectMetadata.setID(entity.getID());
         subjectMetadata.setName(entity.getName());
         subjectMetadata.setProgrammingLanguage(entity.getProgrammingLanguage());
+        subjectMetadata.setUsers(entity.getUsers());
 
         return subjectMetadata;
     }
@@ -21,7 +22,7 @@ public class SubjectMetadataConverter {
         entity.setID(subjectMetadata.getID());
         entity.setName(subjectMetadata.getName());
         entity.setProgrammingLanguage(subjectMetadata.getProgrammingLanguage());
-
+        entity.setUsers(subjectMetadata.getUsers());
         return entity;
     }
 

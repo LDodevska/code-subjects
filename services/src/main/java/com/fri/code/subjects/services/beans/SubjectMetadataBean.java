@@ -1,12 +1,14 @@
 package com.fri.code.subjects.services.beans;
 
 import com.fri.code.subjects.lib.SubjectMetadata;
+import com.fri.code.subjects.lib.UserMetadata;
 import com.fri.code.subjects.models.converters.SubjectMetadataConverter;
 import com.fri.code.subjects.models.entities.SubjectMetadataEntity;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -28,6 +30,35 @@ public class SubjectMetadataBean {
         return SubjectMetadataConverter.toDTO(query.setParameter(1, subjectID).getSingleResult());
     }
 
+    public List<SubjectMetadata> getSubjectsForUser(Integer userID){
+        TypedQuery<SubjectMetadataEntity> query = em.createNamedQuery("SubjectMetadataEntity.getAll", SubjectMetadataEntity.class).setParameter(1, userID);
+        return query.getResultList().stream().map(SubjectMetadataConverter::toDTO).collect(Collectors.toList());
+    }
+
+    public SubjectMetadata addUser(Integer subjectID, Integer userID){
+        SubjectMetadataEntity entity = em.find(SubjectMetadataEntity.class, subjectID);
+
+        if (entity == null){
+            return null;
+        }
+
+        SubjectMetadata subjectDto = SubjectMetadataConverter.toDTO(entity);
+        subjectDto.addUserId(userID);
+
+        SubjectMetadataEntity updatedEntity = SubjectMetadataConverter.toEntity(subjectDto);
+
+        try {
+            beginTx();
+            updatedEntity.setID(entity.getID());
+            updatedEntity = em.merge(updatedEntity);
+            commitTx();
+        } catch (Exception e) {
+            rollbackTx();
+        }
+
+        return SubjectMetadataConverter.toDTO(updatedEntity);
+
+    }
 
     public SubjectMetadata createSubjectMetadata(SubjectMetadata subjectMetadata){
         SubjectMetadataEntity subjectMetadataEntity = SubjectMetadataConverter.toEntity(subjectMetadata);
@@ -54,10 +85,7 @@ public class SubjectMetadataBean {
         if (entity == null){
             return null;
         }
-
-
         SubjectMetadataEntity updatedEntity = SubjectMetadataConverter.toEntity(subjectMetadata);
-
 
         try {
             beginTx();
