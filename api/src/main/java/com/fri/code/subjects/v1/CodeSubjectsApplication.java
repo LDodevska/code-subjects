@@ -12,7 +12,7 @@ import javax.ws.rs.core.Application;
 
 @ApplicationPath("/v1")
 @OpenAPIDefinition(info = @Info(title = "SubjectsApi", version = "v1.0.0",
-        contact = @Contact()), servers = @Server(url = "http://localhost:8083/v1"), security
+        contact = @Contact()), servers = @Server(url = "http://35.232.167.62:8080/v1"), security
         = @SecurityRequirement(name = "openid-connect"))
 @RegisterService
 public class CodeSubjectsApplication extends Application {
