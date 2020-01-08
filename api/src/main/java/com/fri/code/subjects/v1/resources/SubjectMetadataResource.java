@@ -65,7 +65,8 @@ public class SubjectMetadataResource {
     @Operation(summary = "Get subject", description = "Returns details for the specific subject.")
     @ApiResponses({
             @ApiResponse(description = "Subject details", responseCode = "200",
-                    content = @Content(schema = @Schema(implementation = SubjectMetadata.class)))
+                    content = @Content(schema = @Schema(implementation = SubjectMetadata.class))),
+            @ApiResponse(description = "The subject cannot be found", responseCode = "404")
     })
     @Path("/{subjectID}")
     public Response getSubjectById(@PathParam("subjectID") Integer subjectID) {
@@ -83,7 +84,8 @@ public class SubjectMetadataResource {
     @ApiResponses({
             @ApiResponse(description = "Add user ID for subject", responseCode = "200",
                     content = @Content(schema = @Schema(implementation =
-                    SubjectMetadata.class)))
+                    SubjectMetadata.class))),
+            @ApiResponse(description = "The user ID cannot be added", responseCode = "400")
     })
     @Path("/{subjectID}/addUser")
     public Response addUser(@PathParam("subjectID") Integer subjectID, @QueryParam("userID") Integer userID){
@@ -99,7 +101,8 @@ public class SubjectMetadataResource {
     @Operation(summary = "Remove user ID for specific subject", description = "Returns subject with updated user IDs.")
     @ApiResponses({
             @ApiResponse(description = "Remove user ID for subject", responseCode = "200",
-                    content = @Content(schema = @Schema(implementation = SubjectMetadata.class)))
+                    content = @Content(schema = @Schema(implementation = SubjectMetadata.class))),
+            @ApiResponse(description = "The user ID cannot be removed", responseCode = "400")
     })
     @Path("/{subjectID}/removeUser")
     public Response removeUser(@PathParam("subjectID") Integer subjectID, @QueryParam("userID") Integer userID){
@@ -116,7 +119,8 @@ public class SubjectMetadataResource {
     @Operation(summary = "Create a new subject", description = "Returns the created subject.")
     @ApiResponses({
             @ApiResponse(description = "Create new subject", responseCode = "200", content = @Content(schema = @Schema(implementation =
-                    SubjectMetadata.class)))
+                    SubjectMetadata.class))),
+            @ApiResponse(description = "The subject cannot be created", responseCode = "400")
     })
     public Response createSubject(SubjectMetadata subjectMetadata) {
 
@@ -139,7 +143,9 @@ public class SubjectMetadataResource {
     @Operation(summary = "Update an existing subject", description = "Returns the updated subject.")
     @ApiResponses({
             @ApiResponse(description = "Update subject", responseCode = "200", content = @Content(schema = @Schema(implementation =
-                    SubjectMetadata.class)))
+                    SubjectMetadata.class))),
+            @ApiResponse(description = "Missing parameters", responseCode = "400"),
+            @ApiResponse(description = "The subject cannot be found", responseCode = "404")
     })
     @Path("/{subjectID}")
     public Response putSubject(@PathParam("subjectID") Integer subjectID, SubjectMetadata updatedSubject) {
@@ -159,7 +165,8 @@ public class SubjectMetadataResource {
     @DELETE
     @Operation(summary = "Delete an existing subject", description = "Deletes a specific subject.")
     @ApiResponses({
-            @ApiResponse(description = "Delete subject", responseCode = "204")
+            @ApiResponse(description = "Delete subject", responseCode = "204"),
+            @ApiResponse(description = "The subject cannot be found", responseCode = "404")
     })
     @Path("/{subjectID}")
     public Response deleteSubject(@PathParam("subjectID") Integer subjectID) {
